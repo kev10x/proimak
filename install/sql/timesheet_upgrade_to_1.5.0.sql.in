@@ -1,0 +1,11 @@
+ALTER table __TABLE_PREFIX__times  ADD duration SMALLINT UNSIGNED AFTER end_time;
+ALTER table __TABLE_PREFIX__user  ADD session varchar(32) AFTER uid;
+ALTER table __TABLE_PREFIX__user CHANGE COLUMN status status enum('INACTIVE','ACTIVE') NOT NULL DEFAULT 'ACTIVE';
+UPDATE __TABLE_PREFIX__user SET status='ACTIVE';
+
+ALTER table __TABLE_PREFIX__config CHANGE COLUMN aclCalendar aclMonthly ENUM('Admin','Mgr','Basic','None') NOT NULL DEFAULT 'Basic';
+
+ALTER table __TABLE_PREFIX__config CHANGE COLUMN startPage oldStartPage ENUM('stopwatch','daily','weekly','calendar','simple') NOT NULL DEFAULT 'calendar';
+ALTER table __TABLE_PREFIX__config ADD  startPage ENUM('stopwatch','daily','weekly','monthly','simple') NOT NULL DEFAULT 'monthly' AFTER oldStartPage;
+UPDATE __TABLE_PREFIX__config SET startPage = oldStartPage + 0;
+ALTER table __TABLE_PREFIX__config DROP oldStartPage;

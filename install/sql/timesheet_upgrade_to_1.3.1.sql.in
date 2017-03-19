@@ -1,0 +1,39 @@
+ALTER TABLE __TABLE_PREFIX__config ADD COLUMN LDAPBindByUser tinyint(4) NOT NULL default '0';
+ALTER TABLE __TABLE_PREFIX__config ADD `aclStopwatch` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclDaily` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclWeekly` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclCalendar` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclSimple` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclClients` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclProjects` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclTasks` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL, ADD `aclReports` ENUM('Admin','Mgr','Basic','None') DEFAULT 'Basic' NOT NULL;
+ALTER TABLE __TABLE_PREFIX__config ADD `startPage` enum('stopwatch', 'daily', 'weekly', 'calendar', 'simple') NOT NULL DEFAULT 'calendar';
+ALTER TABLE __TABLE_PREFIX__config ADD `simpleTimesheetLayout` enum('small work description field', 'big work description field', 'no work description field') NOT NULL DEFAULT 'small work description field';
+ALTER TABLE __TABLE_PREFIX__config ADD `aclRates` ENUM('Admin', 'Mgr', 'Basic', 'None') DEFAULT 'None' NOT NULL AFTER `aclReports`, ADD `aclAbsences` ENUM('Admin', 'Mgr', 'Basic', 'None') DEFAULT 'None' NOT NULL AFTER `aclRates`;
+ALTER TABLE __TABLE_PREFIX__config ADD `LDAPReferrals` BIT(1) NOT NULL AFTER `LDAPBindByUser`, ADD `LDAPFallback` BIT(1) NOT NULL AFTER `LDAPReferrals`;
+
+ALTER TABLE __TABLE_PREFIX__times CHANGE `log_message` `log_message` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE __TABLE_PREFIX__assignments ADD `rate_id` INT DEFAULT '0' NOT NULL ;
+ALTER TABLE __TABLE_PREFIX__user DROP `allowed_realms` ;
+ALTER TABLE __TABLE_PREFIX__user DROP `bill_rate` ;
+ALTER TABLE __TABLE_PREFIX__user DROP `phone` ;
+
+CREATE TABLE __TABLE_PREFIX__billrate (
+  rate_id int(8) NOT NULL auto_increment,
+  bill_rate decimal(8,2) DEFAULT '0.00' NOT NULL,
+  PRIMARY KEY (rate_id)
+);
+
+INSERT INTO __TABLE_PREFIX__billrate VALUES ( 1, 0.00);
+
+CREATE TABLE __TABLE_PREFIX__absences (
+  `entry_id` int(6) NOT NULL auto_increment,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `AM_PM` enum('day','AM','PM') NOT NULL default 'day',
+  `subject` varchar(127) NOT NULL default '',
+  `type` enum('Holiday','Sick','Military','Training','Compensation','Other','Public') NOT NULL default 'Holiday',
+  `user` varchar(32) NOT NULL default '0',
+  PRIMARY KEY  (`entry_id`)
+);
+
+CREATE TABLE `__TABLE_PREFIX__allowances` (
+  `entry_id` INT NOT NULL AUTO_INCREMENT, 
+  `username` varchar(32) NOT NULL default '0',
+  `date` DATE NOT NULL, 
+  `Holiday` INT NOT NULL, 
+  `glidetime` TIME NOT NULL, 
+  PRIMARY KEY (`entry_id`)
+);

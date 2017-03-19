@@ -1,0 +1,154 @@
+TimesheetNextGen installation.
+
+   <<<<<<<<<<<<<<<<<<<<<x>>>>>>>>>>>>>>>>>>>>>
+
+Updating from 1.5.0 to 1.5.1?  Version 1.5.1 includes updates to the default items within the configuration 
+database, but no database schema changes. That means a manual update should be very easy to accomplish:
+
+	1. do a "diff -r --brief" between the new downloaded directory, and the existing 1.5.0 installation
+	   copy the files that are different from the new directory to the installed version
+	2. copy the .manual_update_151.php to the installed version directory
+	3. cd to the installed directory and run it like: "php .manual_update_151.php"
+	4. edit the database_credentials.inc file, and change the version to 1.5.1
+	5. delete the .manual_update_151.php file
+
+Or, you can do the update via the web browser or command line too.
+
+
+   <<<<<<<<<<<<<<<<<<<<<x>>>>>>>>>>>>>>>>>>>>>
+
+NEW Installations or Upgrades from versions before 1.5.0
+
+There are two different easy methods available to install or upgrade the 
+TimesheetNextGen system: 
+	1. Using a web browser
+	2. From the command line
+
+I suggest using the web browser because there are more safety checks and a 
+couple extra options that aren't available via the command line.
+
+The hard method: manually, instructions are below.
+
+
+   <<<<<<<<<<<<<<<<<<<<<x>>>>>>>>>>>>>>>>>>>>>
+
+
+Web Installation
+
+	1. Copy the distribution files to an active web location, such as 
+	   htdocs/www, or an new active virtual website (my favorite option). 
+
+	2. If you are performing an upgrade, then copy the files 
+	   "database_credentials.inc" and "table_names.inc" from your previous 
+	   installation to this new instance.
+
+	3. Point a browser to this address and follow the instructions there.
+
+
+   <<<<<<<<<<<<<<<<<<<<<x>>>>>>>>>>>>>>>>>>>>>
+
+
+UNIX SYSTEMS WITH SHELL ACCESS
+
+To install, run the script:
+
+	install/install.sh
+
+To upgrade from an earlier version, run the script:
+
+	install/upgrade.sh
+
+
+   <<<<<<<<<<<<<<<<<<<<<x>>>>>>>>>>>>>>>>>>>>>
+
+
+SERVERS WITHOUT SHELL ACCESS OR WINDOWS SYSTEMS
+
+Manual Installation
+
+1. Extract the distribution files locally, so that you can edit some of them before uploading to your web server
+
+2a. Create a database on the mysql server. 
+
+	This can be done manually if you know how, 
+	or by running the script that comes with the distribution.
+
+	First open the "timesheet_create.sql.in" file and replace the following occurrances:
+
+	__DBUSER__ replace with the database username (one with privileges to create databases)
+	__DBNAME__ the name of the database you want to create (e.g. "timesheet")
+	__DBHOST__ the hostname which mysql is runnning on
+	__DBPASS__ the password for the username which will access it
+	__DBPASSWORDFUNCTION__ either "SHA1", "PASSWORD" or "OLD_PASSWORD" depending on your version of mysql. (See footnote)
+
+	Now rename it to "timesheet_create.sql"
+	and run it. This script is just a list of SQL commands.
+	If you don't use this script, be sure to set the privileges on the new database.
+
+
+2b. (Alternatively) Use an existing database, edit the upgrade sql scripts to replace the table prefixes, and apply them one at a time.
+	Edit the table_names.inc file to list all the appropriate table names.
+	Skip to step 6.
+
+
+3. Create the tables
+
+	Open the "timesheet.sql.in" and replace all instances of __TABLE_PREFIX__ 
+	with a prefix you would like all tables to start with. This is done so that
+	tables like "user" don't conflict with other tables you have in the same database.
+	If you have no other tables you can just delete occurances of __TABLE_PREFIX__
+	from the file.
+
+	Now rename it to "timesheet.sql". It is just a set of SQL commands to be run from mysql
+	or whatever interface you have to it. Make sure you run it on the right database.
+
+4. Enter your database details into the "database_credentials.inc.in" file from the distribution. 
+	
+	The values you need to set are:
+
+	$DATABASE_HOST - (The hostname of the database - usually 'localhost')
+	$DATABASE_USER - (The username which you will connect to the database with)
+	$DATABASE_PASS - (The password which you will connect to the database with)
+	$DATABASE_DB - (The name of the database you created - usually 'timesheet')
+	$DATABASE_PASSWORD_FUNCTION (either "SHA1", "PASSWORD" or "OLD_PASSWORD" depending on your version of mysql. [See footnote])
+
+
+	These values are not required, but may help an upgrade process in the future
+	$TIMESHEET_VERSION   - (The current version of the Timesheet system)
+	$TIMESHEET_INSTALLED - (If the Timesheet system is installed, should be the numeral one).
+
+	Now rename this file to "database_credentials.inc"
+ 
+5. Set the admin password for TimesheetNextGen, by running the following SQL command:
+
+	INSERT INTO user (username,level,password,first_name,last_name) VALUES ('admin', 10, PASSWORD('<password>'), 'Timesheet', 'Admin');
+
+	Also run these:
+
+	INSERT INTO assignments VALUES(1,'admin');
+	INSERT INTO task_assignments VALUES(1,'admin', '1');
+
+6. Upload the files to your web server.
+
+7. Test the installation by logging in to 'login.php' with the username 'admin', and the <password> entered above.
+
+
+   <<<<<<<<<<<<<<<<<<<<<x>>>>>>>>>>>>>>>>>>>>>
+
+
+FOOTNOTE
+--------
+
+Due to changes to MySQL in version 4.1, the way that passwords are stored and
+accessed has changed. There are 3 different functions and you must choose the
+correct one according to your version of MySQL.
+
+You can determine your local version of mysql by typing
+
+mysql --version
+
+You will need to choose one of the folling password functions:
+
+SHA1 (Use this for version 4.1 and later)
+PASSWORD (Use this for versions below 4.1)
+OLD_PASSWORD (For versions above 4.1 when SHA1 fails)

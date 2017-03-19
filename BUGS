@@ -1,0 +1,22 @@
+Please use the bug tracking system at http://bugs.timesheetng.org to
+  a) see if someone else has already reported the bug you are experiencing
+  b) fill out a bug report if there isn't
+
+	 <<<<<<<<<<<<<<<<<<<<<<<*>>>>>>>>>>>>>>>>>>>>>
+
+ Mixed usage of the daily forms and the simple form has the potential to both
+ add time and delete time from a user's entries when time that was originally
+ entered with a daily form is then edited with the simple form when the daily
+ entries span the end of a week.  
+
+ For instance if a user works from 10pm on Sunday until 3am on Monday, and
+ that single entry is made with the daily form, then the simple form is used
+ to edit the week ending Sunday, the time from Midnight Monday to 3am will be
+ deleted from the user's entries.  
+
+ If, instead, the week beginning Monday is edited, the 3 hours on Monday will
+ be added to that task for Monday time EVERY TIME the simple form is saved.  
+
+ It's not easily fixed, but it can be avoided by not allowing both the daily
+ and simple forms to be used.
+

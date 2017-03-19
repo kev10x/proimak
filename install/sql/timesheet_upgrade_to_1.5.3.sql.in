@@ -1,0 +1,56 @@
+CREATE TABLE IF NOT EXISTS `__TABLE_PREFIX__configuration` (
+  name varchar(32) NOT NULL,
+  value text NOT NULL,
+  PRIMARY KEY (name)
+);
+
+-- copy stuff from active config to new configuration table 
+
+insert into __TABLE_PREFIX__configuration (name, value) values ('version','__TIMESHEET_VERSION__');
+insert into __TABLE_PREFIX__configuration (name, value) values ('locale',(select locale from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('timezone',(select timezone from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('timeformat',(select timeformat from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('weekstartday',(select weekstartday from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('simpleTimesheetLayout',(select simpleTimesheetLayout from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('startPage',(select startPage from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('project_items_per_page',(select project_items_per_page from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('task_items_per_page',(select task_items_per_page from __TABLE_PREFIX__config where config_set_id=1));
+
+insert into __TABLE_PREFIX__configuration (name, value) values ('headerhtml',(select headerhtml from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('footerhtml',(select footerhtml from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('bannerhtml',(select bannerhtml from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('tablehtml',(select tablehtml from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('errorhtml',(select errorhtml from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('bodyhtml',(select bodyhtml from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('useLDAP',(select useLDAP from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPurl',(select concat((select LDAPScheme from __TABLE_PREFIX__config where config_set_id=1),"://",(select LDAPHost from __TABLE_PREFIX__config where config_set_id=1),":",(select (LDAPPort) from __TABLE_PREFIX__config where config_set_id=1),"/")));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPBaseDN',(select LDAPBaseDN from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPUsernameAttribute',(select LDAPUsernameAttribute from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPSearchScope',(select LDAPSearchScope from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPFilter',(select LDAPFilter from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPProtocolVersion',(select LDAPProtocolVersion from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPBindUsername',(select LDAPBindUsername from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPBindPassword',(select LDAPBindPassword from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPBindByUser',(select LDAPBindByUser from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPReferrals',(select LDAPReferrals from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPFallback',(select LDAPFallback from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPHost',(select LDAPHost from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPPort',(select LDAPPort from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('LDAPScheme',(select LDAPScheme from __TABLE_PREFIX__config where config_set_id=1));
+
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclStopwatch',(select aclStopwatch from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclDaily',(select aclDaily from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclWeekly',(select aclWeekly from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclMonthly',(select aclMonthly from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclSimple',(select aclSimple from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclClients',(select aclClients from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclProjects',(select aclProjects from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclTasks',(select aclTasks from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclReports',(select aclReports from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclRates',(select aclRates from __TABLE_PREFIX__config where config_set_id=1));
+insert into __TABLE_PREFIX__configuration (name, value) values ('aclAbsences',(select aclAbsences from __TABLE_PREFIX__config where config_set_id=1));
+
+DROP TABLE __TABLE_PREFIX__config;
+
+-- change name of one field in times table
+ALTER TABLE __TABLE_PREFIX__times CHANGE `uid` `username` varchar(32) DEFAULT '' NOT NULL

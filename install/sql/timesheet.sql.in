@@ -1,0 +1,238 @@
+#--------------------------------------------------------
+#
+# Table structure for table 'billrate'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__billrate;
+CREATE TABLE __TABLE_PREFIX__billrate (
+  rate_id int(8) NOT NULL auto_increment,
+  bill_rate decimal(8,2) DEFAULT '0.00' NOT NULL,
+  PRIMARY KEY (rate_id)
+);
+
+INSERT INTO __TABLE_PREFIX__billrate VALUES ( 1, 0.00);
+
+#--------------------------------------------------------
+#
+# Table structure for table 'assignments'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__assignments;
+CREATE TABLE __TABLE_PREFIX__assignments (
+  proj_id int(11) DEFAULT '0' NOT NULL,
+  username char(32) DEFAULT '' NOT NULL,
+  rate_id int(11) NOT NULL,
+  PRIMARY KEY (proj_id,username)
+);
+
+INSERT INTO __TABLE_PREFIX__assignments VALUES (1, 'guest', 1);
+
+#--------------------------------------------------------
+#
+# Table structure for table 'client'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__client;
+CREATE TABLE __TABLE_PREFIX__client (
+  client_id int(8) NOT NULL auto_increment,
+  organisation varchar(64),
+  description varchar(255),
+  address1 varchar(127),
+  city varchar(60),
+  state varchar(80),
+  country char(2),
+  postal_code varchar(13),
+  contact_first_name varchar(127),
+  contact_last_name varchar(127),
+  username varchar(32),
+  contact_email varchar(127),
+  phone_number varchar(20),
+  fax_number varchar(20),
+  gsm_number varchar(20),
+  http_url varchar(127),
+  address2 varchar(127),
+  PRIMARY KEY (client_id)
+);
+
+INSERT INTO __TABLE_PREFIX__client VALUES (1,'No Client', 'This is required, do not edit or delete this client record', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+
+#--------------------------------------------------------
+#
+# Table structure for table 'configuration'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__configuration;
+CREATE TABLE IF NOT EXISTS __TABLE_PREFIX__configuration (
+  name varchar(32) NOT NULL,
+  value text NOT NULL,
+  PRIMARY KEY (name)
+);
+
+--
+-- Create basic entries for table `__TABLE_PREFIX__configuration`
+--
+
+INSERT INTO __TABLE_PREFIX__configuration (name, value) VALUES
+('aclAbsences', 'Basic'),
+('aclClients', 'Basic'),
+('aclDaily', 'Basic'),
+('aclMonthly', 'Basic'),
+('aclProjects', 'Basic'),
+('aclRates', 'Basic'),
+('aclReports', 'Basic'),
+('aclSimple', 'Basic'),
+('aclStopwatch', 'Basic'),
+('aclTasks', 'Basic'),
+('aclWeekly', 'Basic'),
+('headerhtml', '<meta name="description" content="Timesheet Next Gen">\r\n<link href="css/timesheet.css" rel="stylesheet" type="text/css">\r\n<link rel="shortcut icon" href="images/favicon.ico">'),
+('bodyhtml', 'link=\"#004E8A\" vlink=\"#171A42\"'),
+('footerhtml', '<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n<tr><td style=\"background-color: #000788; padding: 3;\" class=\"bottom_bar_text\" align=\"center\">\r\nTimesheetNextGen\r\n<br /><span style=\"font-size: 9px;\"><b>Page generated %time% %date% (%timezone% time)</b></span>\r\n</td></tr></table>'), 
+('errorhtml', '<table border=0 cellpadding=5 width=\"100%\">\r\n<tr>\r\n  <td><font size=\"+2\" color=\"red\">%errormsg%</font></td>\r\n</tr></table>\r\n<p>Please go <a href=\"javascript:history.back()\">Back</a> and try again.</p>'), 
+('bannerhtml', '<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>\r\n<td colspan=\"2\" style=\"background-image: url(\'images/timesheet_background_pattern.gif\');\"><img src=\"images/timesheet_banner.gif\" alt=\"Timesheet Banner\" /></td>\r\n</tr><tr>\r\n<td style=\"background-color: #F2F3FF; padding: 3;\">%commandmenu%</td>\r\n<td style=\"background-color: #F2F3FF; padding: 3;\" align=\"right\" width=\"145\" valign=\"top\">You are logged in as %username%</td>\r\n</tr><tr>\r\n<td colspan=\"2\" height=\"1\" style=\"background-color: #758DD6;\"><img src=\"images/spacer.gif\" alt=\"\" width=\"1\" height=\"1\" /></td>\r\n</tr></table>'),
+('tablehtml', ''),
+('useLDAP', '0'),
+('LDAPBaseDN', 'dc=watson'),
+('LDAPBindByUser', '0'),
+('LDAPBindPassword', ''),
+('LDAPBindUsername', ''),
+('LDAPFallback', '0'),
+('LDAPFilter', ''),
+('LDAPProtocolVersion', '3'),
+('LDAPReferrals', '0'),
+('LDAPSearchScope', 'base'),
+('LDAPurl', 'ldap://watson:389/'),
+('LDAPUsernameAttribute', 'cn'),
+('LDAPScheme', 'ldap'), 
+('LDAPPort', '389'), 
+('LDAPHost', 'watson'), 
+('locale', 'C'),
+('project_items_per_page', '10'),
+('simpleTimesheetLayout', 'small work description field'),
+('startPage', 'monthly'),
+('task_items_per_page', '10'),
+('timeformat', '12'),
+('timezone', 'Europe/Zurich'),
+('version', '__TIMESHEET_VERSION__'),
+('weekstartday', '1');
+
+#--------------------------------------------------------
+#
+# Table structure for table 'project'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__project;
+CREATE TABLE __TABLE_PREFIX__project (
+  proj_id int(11) NOT NULL auto_increment,
+  title varchar(200) DEFAULT '' NOT NULL,
+  client_id int(11) DEFAULT '0' NOT NULL,
+  description varchar(255),
+  start_date date DEFAULT '1970-01-01' NOT NULL,
+  deadline date DEFAULT '0000-00-00' NOT NULL,
+  http_link varchar(127),
+  proj_status enum('Pending','Started','Suspended','Complete') DEFAULT 'Pending' NOT NULL,
+  proj_leader varchar(32) DEFAULT '' NOT NULL,
+  PRIMARY KEY (proj_id)
+);
+
+INSERT INTO __TABLE_PREFIX__project VALUES ( 1, 'Default Project', 1, '','1970-01-01','1970-01-01','','Started','');
+
+#--------------------------------------------------------
+#
+# Table structure for table 'task'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__task;
+CREATE TABLE __TABLE_PREFIX__task (
+  task_id int(11) NOT NULL auto_increment,
+  proj_id int(11) DEFAULT '0' NOT NULL,
+  name varchar(127) DEFAULT '' NOT NULL,
+  description text,
+  assigned datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  started datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  suspended datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  completed datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  status enum('Pending','Assigned','Started','Suspended','Complete') DEFAULT 'Pending' NOT NULL,
+  PRIMARY KEY (task_id)
+);
+
+INSERT INTO __TABLE_PREFIX__task VALUES (1,1,'Default Task','','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','Started');
+
+#--------------------------------------------------------
+#
+# Table structure for table 'task_assignments'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__task_assignments;
+CREATE TABLE __TABLE_PREFIX__task_assignments (
+  task_id int(8) DEFAULT '0' NOT NULL,
+  username varchar(32) DEFAULT '' NOT NULL,
+  proj_id int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (task_id,username)
+);
+
+INSERT INTO __TABLE_PREFIX__task_assignments VALUES ( 1, 'guest', 1);
+
+#--------------------------------------------------------
+#
+# Table structure for table 'times'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__times;
+CREATE TABLE __TABLE_PREFIX__times (
+  username varchar(32) DEFAULT '' NOT NULL,
+  start_time datetime DEFAULT '1970-01-01 00:00:00' NOT NULL,
+  end_time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  duration smallint unsigned,
+  trans_num int(11) NOT NULL auto_increment,
+  proj_id int(11) DEFAULT '1' NOT NULL,
+  task_id int(11) DEFAULT '1' NOT NULL,
+  log_message TEXT,
+  status enum('Open','Submitted','Approved') NOT NULL DEFAULT 'Open',
+  KEY username (username,trans_num),
+  UNIQUE trans_num (trans_num)
+);
+
+#--------------------------------------------------------
+#
+# Table structure for table 'user'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__user;
+CREATE TABLE __TABLE_PREFIX__user (
+  username varchar(32) DEFAULT '' NOT NULL,
+  level int(11) DEFAULT '0' NOT NULL,
+  password varchar(41) DEFAULT '' NOT NULL,
+  first_name varchar(64) DEFAULT '' NOT NULL,
+  last_name varchar(64) DEFAULT '' NOT NULL,
+  email_address varchar(63) DEFAULT '' NOT NULL,
+  time_stamp timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status enum('INACTIVE','ACTIVE') DEFAULT 'ACTIVE' NOT NULL,
+  uid int(11) NOT NULL auto_increment,
+  supervisor int(11) DEFAULT NULL,
+  employee_type enum('Contractor','Employee') NOT NULL DEFAULT 'Employee',
+  session varchar(32),
+  PRIMARY KEY (username),
+  KEY uid (uid)
+);
+
+INSERT INTO __TABLE_PREFIX__user (username,level,password,first_name,last_name) VALUES ('guest',1,__DBPASSWORDFUNCTION__(''),'Guest','User');
+
+#--------------------------------------------------------
+#
+# Table structure for table 'absences'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__absences;
+CREATE TABLE __TABLE_PREFIX__absences (
+  `entry_id` int(6) NOT NULL auto_increment,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `AM_PM` enum('day','AM','PM') NOT NULL default 'day',
+  `subject` varchar(127) NOT NULL default '',
+  `type` enum('Holiday','Sick','Military','Training','Compensation','Other','Public') NOT NULL default 'Holiday',
+  `user` varchar(32) NOT NULL default '0',
+  PRIMARY KEY  (`entry_id`)
+);
+
+#--------------------------------------------------------
+#
+# Table structure for table 'allowances'
+#
+DROP TABLE IF EXISTS __TABLE_PREFIX__allowances;
+CREATE TABLE `__TABLE_PREFIX__allowances` (
+  `entry_id` INT NOT NULL AUTO_INCREMENT, 
+  `username` varchar(32) NOT NULL default '0',
+  `date` DATE NOT NULL, 
+  `Holiday` INT NOT NULL, 
+  `glidetime` TIME NOT NULL, 
+  PRIMARY KEY (`entry_id`)
+);

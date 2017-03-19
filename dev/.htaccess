@@ -1,0 +1,7 @@
+#disable multiviews as this causes everything to break
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+RewriteEngine off
+
+</IfModule> 

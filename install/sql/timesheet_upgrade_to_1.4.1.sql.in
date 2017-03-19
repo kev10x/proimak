@@ -1,0 +1,4 @@
+ALTER TABLE __TABLE_PREFIX__config MODIFY `LDAPReferrals` tinyint(4) default '0' NOT NULL;
+ALTER TABLE __TABLE_PREFIX__config MODIFY `LDAPFallback` tinyint(4) default '0' NOT NULL;
+ALTER TABLE __TABLE_PREFIX__config ADD    `project_items_per_page` int(11) default 10 AFTER `startPage`;
+ALTER TABLE __TABLE_PREFIX__config ADD    `task_items_per_page` int(11) default 10 AFTER `project_items_per_page`;

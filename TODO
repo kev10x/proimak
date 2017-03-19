@@ -1,0 +1,7 @@
+TODO list
+---------
+- allow tasks to have an expected hours, and when people clock off, they can enter in a percentage complete
+- make sure tasks in the day view are sorted by start date
+- in the admin pages, when you mouse over a task, it should display the description
+- add some nice icons
+- Make tasks that have status 'Completed' not shown in droplists for task selection.

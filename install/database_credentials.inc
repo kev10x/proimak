@@ -1,0 +1,12 @@
+<?php
+$TIMESHEET_VERSION = "1.5.3";
+$TIMESHEET_INSTALLED = "1";
+
+
+$DATABASE_HOST = "localhost";
+$DATABASE_USER = "dbadmin";
+$DATABASE_PASS = "Pwd2wic3";
+$DATABASE_DB = "timesheet";
+$DATABASE_PASSWORD_FUNCTION = "SHA1";
+
+?>
